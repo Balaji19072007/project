@@ -1,0 +1,33 @@
+1. Cross-Site Scripting (XSS) Vulnerability on testasp.vulnweb.com
+2. Affected Domain and Subdomain
+   Domain: vulnweb.com
+   Subdomain: testasp.vulnweb.com
+
+3. Vulnerability Description
+A Cross-Site Scripting (XSS) vulnerability was identified on the search page of testasp.vulnweb.com. This vulnerability allows an attacker to inject malicious, client-side scripts into the webpage viewed by other users. The website's search functionality fails to properly sanitize or encode user input before reflecting it back on the page, leading to a Reflected XSS flaw. This type of vulnerability can be exploited by an attacker who tricks a user into clicking a specially crafted URL.
+
+4. Steps to Reproduce
+   Navigate to the website at http://testasp.vulnweb.com/.
+   Click on the "Search" option located in the top menu.
+   The URL will change to http://testasp.vulnweb.com/search.asp.
+   Intercept the request using a proxy tool like Burp Suite.
+   In the intercepted request, modify the search query parameter.
+   Inject the following payload into the search parameter: <script>alert("XSS")</script>. The full URL will look similar to this: http://testasp.vulnweb.com/search.asp?keyword=%3Cscript%3Ealert%28%22XSS%22%29%3C/script%3E.
+   Forward the request. The alert box "XSS" will pop up, confirming the vulnerability.
+
+5. Proof of Concept (POC)
+   A successful Proof of Concept shows that the injected script was executed by the browser. When the URL containing the payload is loaded, a JavaScript alert box appears on the screen, indicating that the browser has interpreted the injected code as a script rather than plain text. This proves the XSS vulnerability exists.
+
+6. Impact
+   An XSS vulnerability poses a significant risk to the security and integrity of a website and its users. The potential consequences include:
+   Session Hijacking: An attacker can steal a user's session cookies, allowing them to impersonate the user and take over their account without needing a password.
+   Defacement: Malicious scripts can be used to alter the appearance of the website, displaying offensive content or misleading information.
+   Malware Installation: The attacker can force the user's browser to download and execute malicious files, potentially installing malware on their computer.
+   Phishing: The attacker can create fake login forms or pop-ups to steal user credentials.
+   Redirecting to Malicious Sites: The attacker can redirect users from the legitimate website to a different, malicious site.
+
+7. Mitigation
+   To prevent Cross-Site Scripting, the following server-side security measures should be implemented:
+   Input Validation: Sanitize and validate all user input on the server side. This involves filtering out or removing potentially harmful characters like <, >, ', and ".
+   Output Encoding: Before displaying any user-generated content on a webpage, ensure that it is properly HTML-encoded. This transforms special characters into their entity equivalents (e.g., < becomes &lt;), so the browser renders them as plain text instead of executing them as code.
+   Content Security Policy (CSP): Implement a robust Content Security Policy header to restrict the sources from which the browser can load scripts, stylesheets, and other resources. This acts as a powerful defense layer, even if some XSS vulnerabilities are missed during the development process.
